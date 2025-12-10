@@ -1,7 +1,38 @@
 ﻿#include <io.h> // _setmode, _fileno.
 #include <fcntl.h> // _O_U16TEXT.
 #include <iostream> // std::wcout.
-#include <Engine.h>
+#include <string>
+#include <Windows.h>
+
+#include "Core/Engine.h"
+#include "Math/Vector2.h"
+
+// ANSI 문자열(현 시스템 코드페이지 기준)을 std::wstring으로 변환.
+std::wstring AnsiToWide(const char* str)
+{
+	if (str == nullptr)
+	{
+		return (L"");
+	}
+
+	// MultiByteToWideChar: ANSI(멀티바이트) -> UTF-16
+	// 먼저 필요한 wide 문자 개수(널포함)를 얻는다.
+	const int length = MultiByteToWideChar(CP_ACP, 0, str, -1, nullptr, 0);
+	if (length <= 0)
+	{
+		return (L"");
+	}
+
+	// Length에는 널 문자까지 포함된 길이가 들어있다.
+	// std::wstring result는 널이 보장되어 있어서 Length에서 널은 생략해야한다.
+	std::wstring result;
+	result.resize(length - 1); // 실제 문자열 길이만큼 공간 확보 (널은 제외).
+	
+	// &result[0] 는 쓰기 가능한 버퍼.
+	MultiByteToWideChar(CP_ACP, 0, str, -1, &result[0], length);
+
+	return (result);
+}
 
 // 프로그램의 진입점.
 int wmain(int argc, wchar_t* argv[])
@@ -17,6 +48,15 @@ int wmain(int argc, wchar_t* argv[])
 	}
 
 	std::wcout << L"콘솔 엔진 시작\n";
+
+	// Vector2 테스트.
+	Vector2 a(10, 20);
+	Vector2 b(20, 30);
+	Vector2 c = a + b;
+
+	// ANSI -> Wide 변환 후 출력.
+	std::wstring cText = AnsiToWide(c.ToString());
+	std::wcout << L"a(10, 20) + b(20, 30) = " << cText << L"\n";
 
 	// 엔진 객체 생성.
 	Engine engine;

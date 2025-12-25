@@ -1,6 +1,7 @@
 ﻿#include "Engine.h"
 #include <iostream>
 #include <Windows.h> // 고해상도 타이머, 키 입력 처리를 위한 Windows API
+#include "Levels/level.h" // Level 클래스 사용을 위한 include;
 
 Engine::Engine()
 {
@@ -9,7 +10,12 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	// TODO: 엔진 종료 시 리소스 해제 코드 추가.
+	// mainLevel로 등록된 레벨이 있으면 정리합니다.
+	if (mainLevel != nullptr)
+	{
+		delete mainLevel;
+		mainLevel = nullptr;
+	}
 }
 
 void Engine::Run()
@@ -49,19 +55,33 @@ void Engine::Run()
 		accumulatedTime = accumulatedTime + deltaTime;
 
 		// 입력 처리.
-		this->ProcessInput();
+		ProcessInput();
 
 		// 목표 프레임 시간 이상 경과했을 때만 업데이트/랜더링.
 		if (accumulatedTime >= targetFrameTime)
 		{
-			// Update, Render 처리.
-			Update(accumulatedTime);
+			// 레벨 관련 초기화.
+			BeginPlay();
+			// Tick, Render 처리.
+			Tick(accumulatedTime);
 			Render();
 
 			// 누적 시간 초기화.
 			accumulatedTime = 0.0f;
 		}
 	}
+}
+
+void Engine::AddLevel(Level* newLevel)
+{
+	// 기존에 등록된 레벨이 있으면 정리합니다.
+	if (mainLevel != nullptr)
+	{
+		delete mainLevel;
+		mainLevel = nullptr;
+	}
+
+	mainLevel = newLevel;
 }
 
 void Engine::Quit()
@@ -80,7 +100,16 @@ void Engine::ProcessInput()
 	}
 }
 
-void Engine::Update(float deltaTime)
+void Engine::BeginPlay()
+{
+	// mainLevel이 등록되어 있으면 레벨의 BeginPlay를 호출합니다.
+	if (mainLevel != nullptr)
+	{
+		mainLevel->BeginPlay();
+	}
+}
+
+void Engine::Tick(float deltaTime)
 {
 	// deltaTime: 지난 프레임(또는 누적) 시간(초)
 	if (deltaTime <= 0.0f)
@@ -91,9 +120,19 @@ void Engine::Update(float deltaTime)
 	const float fps = 1.0f / deltaTime;
 
 	std::wcout << L"DeltaTime: " << deltaTime << L", FPS: " << fps << L"\n";
+
+	// 등록된 레벨이 있다면 레벨의 Tick을 호출합니다.
+	if (mainLevel != nullptr)
+	{
+		mainLevel->Tick(deltaTime);
+	}
 }
 
 void Engine::Render()
 {
-	// TODO: 나중에 렌더링(지금은 콘솔 출력 정도) 구현.
+	// 등록된 레벨이 있다면 레벨의 Render를 호출합니다.
+	if (mainLevel != nullptr)
+	{
+		mainLevel->Render();
+	}
 }

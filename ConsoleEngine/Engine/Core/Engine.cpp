@@ -1,6 +1,7 @@
 ﻿#include "Engine.h"
 #include <iostream>
 #include <Windows.h> // 고해상도 타이머, 키 입력 처리를 위한 Windows API
+#include "Levels/level.h" // Level 클래스 사용을 위한 include;
 
 Engine::Engine()
 {
@@ -9,7 +10,12 @@ Engine::Engine()
 
 Engine::~Engine()
 {
-	// TODO: 엔진 종료 시 리소스 해제 코드 추가.
+	// mainLevel로 등록된 레벨이 있으면 정리합니다.
+	if (mainLevel != nullptr)
+	{
+		delete mainLevel;
+		mainLevel = nullptr;
+	}
 }
 
 void Engine::Run()
@@ -49,19 +55,72 @@ void Engine::Run()
 		accumulatedTime = accumulatedTime + deltaTime;
 
 		// 입력 처리.
-		this->ProcessInput();
+		ProcessInput();
 
 		// 목표 프레임 시간 이상 경과했을 때만 업데이트/랜더링.
 		if (accumulatedTime >= targetFrameTime)
 		{
-			// Update, Render 처리.
-			Update(accumulatedTime);
+			// 레벨 관련 초기화.
+			BeginPlay();
+			// Tick, Render 처리.
+			Tick(accumulatedTime);
 			Render();
+
+			// 한 프레임 처리가 끝난 뒤,
+			// 이번 프레임 상태를 "이전 프레임 상태"로 복사합니다.
+			for (int key = 0; key < 256; ++key)
+			{
+				keyStates[key].previousKeyDown = keyStates[key].isKeyDown;
+			}
 
 			// 누적 시간 초기화.
 			accumulatedTime = 0.0f;
 		}
 	}
+}
+
+void Engine::AddLevel(Level* newLevel)
+{
+	// 기존에 등록된 레벨이 있으면 정리합니다.
+	if (mainLevel != nullptr)
+	{
+		delete mainLevel;
+		mainLevel = nullptr;
+	}
+
+	mainLevel = newLevel;
+}
+
+bool Engine::GetKey(int keyCode)
+{
+	if (keyCode < 0 || keyCode >= 256)
+	{
+		return (false);
+	}
+
+	return (keyStates[keyCode].isKeyDown);
+}
+
+bool Engine::GetKeyDown(int keyCode)
+{
+	if (keyCode < 0 || keyCode >= 256)
+	{
+		return (false);
+	}
+
+	const KeyState& state = keyStates[keyCode];
+	return (!state.previousKeyDown && state.isKeyDown);
+}
+
+bool Engine::GetKeyUp(int keyCode)
+{
+	if (keyCode < 0 || keyCode >= 256)
+	{
+		return (false);
+	}
+
+	const KeyState state = keyStates[keyCode];
+	return (state.previousKeyDown && !state.isKeyDown);
 }
 
 void Engine::Quit()
@@ -71,16 +130,25 @@ void Engine::Quit()
 
 void Engine::ProcessInput()
 {
-	// GetAsyncKeyState(VK_ESCPAE)가 0x800 비트가 켜져 있으면
-	// 현재 ESC 키가 눌린 상태라고 판단.
-	if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+	// 모든 가상 키(0~255)에 대해 현재 눌림 상태를 갱신합니다.
+	for (int key = 0; key < 256; ++key)
 	{
-		// isQuit = true; Run 루프 종료.
-		Quit();
+		// GetAsyncKeyState가 0x8000 비트가 켜져 있으면 현재 눌려 있는 상태.
+		keyStates[key].isKeyDown =
+			(GetAsyncKeyState(key) && 0x8000) != 0;
 	}
 }
 
-void Engine::Update(float deltaTime)
+void Engine::BeginPlay()
+{
+	// mainLevel이 등록되어 있으면 레벨의 BeginPlay를 호출합니다.
+	if (mainLevel != nullptr)
+	{
+		mainLevel->BeginPlay();
+	}
+}
+
+void Engine::Tick(float deltaTime)
 {
 	// deltaTime: 지난 프레임(또는 누적) 시간(초)
 	if (deltaTime <= 0.0f)
@@ -88,12 +156,45 @@ void Engine::Update(float deltaTime)
 		return;
 	}
 
-	const float fps = 1.0f / deltaTime;
+#pragma region testDay2
+	//const float fps = 1.0f / deltaTime;
 
-	std::wcout << L"DeltaTime: " << deltaTime << L", FPS: " << fps << L"\n";
+	//std::wcout << L"DeltaTime: " << deltaTime << L", FPS: " << fps << L"\n";
+#pragma endregion
+
+	// 등록된 레벨이 있다면 레벨의 Tick을 호출합니다.
+	if (mainLevel != nullptr)
+	{
+		mainLevel->Tick(deltaTime);
+	}
+
+#pragma region testDay3
+	if (GetKeyDown('A'))
+	{
+		std::wcout << L"[Engine] A KeyDown\n";
+	}
+	if (GetKey('A'))
+	{
+		std::wcout << L"[Engine] A GetKey\n";
+	}
+	if (GetKeyUp('A'))
+	{
+		std::wcout << L"[Engine] A GetKeyUp\n";
+	}
+#pragma endregion
+
+	// ESC 키를 한 번 눌렀을 때 게임 종료.
+	if (GetKeyDown(VK_ESCAPE))
+	{
+		Quit();
+	}
 }
 
 void Engine::Render()
 {
-	// TODO: 나중에 렌더링(지금은 콘솔 출력 정도) 구현.
+	// 등록된 레벨이 있다면 레벨의 Render를 호출합니다.
+	if (mainLevel != nullptr)
+	{
+		mainLevel->Render();
+	}
 }

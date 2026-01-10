@@ -3,9 +3,11 @@
 #include <iostream> // std::wcout.
 #include <string>
 #include <Windows.h>
+#include <crtdbg.h> // 메모리 누수 확인.
 
 #include "Core/Engine.h"
 #include "Math/Vector2.h"
+#include "Levels/DemoLevel.h"
 
 // ANSI 문자열(현 시스템 코드페이지 기준)을 std::wstring으로 변환.
 std::wstring AnsiToWide(const char* str)
@@ -37,6 +39,9 @@ std::wstring AnsiToWide(const char* str)
 // 프로그램의 진입점.
 int wmain(int argc, wchar_t* argv[])
 {
+	// 메모리 누수 체크를 위한 CRT Debug 플래그 설정.
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	// 콘솔의 표준 출력/에러를 UTF-16 텍스트 모드로 변경.
 	if (_setmode(_fileno(stdout), _O_U16TEXT) == -1)
 	{
@@ -49,17 +54,20 @@ int wmain(int argc, wchar_t* argv[])
 
 	std::wcout << L"콘솔 엔진 시작\n";
 
-	// Vector2 테스트.
-	Vector2 a(10, 20);
-	Vector2 b(20, 30);
-	Vector2 c = a + b;
+#pragma region Test_day2
+	//// Vector2 테스트.
+	//Vector2 a(10, 20);
+	//Vector2 b(20, 30);
+	//Vector2 c = a + b;
 
-	// ANSI -> Wide 변환 후 출력.
-	std::wstring cText = AnsiToWide(c.ToString());
-	std::wcout << L"a(10, 20) + b(20, 30) = " << cText << L"\n";
+	//// ANSI -> Wide 변환 후 출력.
+	//std::wstring cText = AnsiToWide(c.ToString());
+	//std::wcout << L"a(10, 20) + b(20, 30) = " << cText << L"\n";
+#pragma endregion
 
-	// 엔진 객체 생성.
+	// 엔진 객체 생성 및 레벨 등록.
 	Engine engine;
+	engine.AddLevel(new DemoLevel());
 
 	// 메인 게임 루프 실행.
 	engine.Run();

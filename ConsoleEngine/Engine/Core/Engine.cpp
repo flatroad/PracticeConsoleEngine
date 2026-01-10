@@ -66,6 +66,13 @@ void Engine::Run()
 			Tick(accumulatedTime);
 			Render();
 
+			// 한 프레임 처리가 끝난 뒤,
+			// 이번 프레임 상태를 "이전 프레임 상태"로 복사합니다.
+			for (int key = 0; key < 256; ++key)
+			{
+				keyStates[key].previousKeyDown = keyStates[key].isKeyDown;
+			}
+
 			// 누적 시간 초기화.
 			accumulatedTime = 0.0f;
 		}
@@ -84,6 +91,38 @@ void Engine::AddLevel(Level* newLevel)
 	mainLevel = newLevel;
 }
 
+bool Engine::GetKey(int keyCode)
+{
+	if (keyCode < 0 || keyCode >= 256)
+	{
+		return (false);
+	}
+
+	return (keyStates[keyCode].isKeyDown);
+}
+
+bool Engine::GetKeyDown(int keyCode)
+{
+	if (keyCode < 0 || keyCode >= 256)
+	{
+		return (false);
+	}
+
+	const KeyState& state = keyStates[keyCode];
+	return (!state.previousKeyDown && state.isKeyDown);
+}
+
+bool Engine::GetKeyUp(int keyCode)
+{
+	if (keyCode < 0 || keyCode >= 256)
+	{
+		return (false);
+	}
+
+	const KeyState state = keyStates[keyCode];
+	return (state.previousKeyDown && !state.isKeyDown);
+}
+
 void Engine::Quit()
 {
 	isQuit = true;
@@ -91,12 +130,12 @@ void Engine::Quit()
 
 void Engine::ProcessInput()
 {
-	// GetAsyncKeyState(VK_ESCPAE)가 0x800 비트가 켜져 있으면
-	// 현재 ESC 키가 눌린 상태라고 판단.
-	if (GetAsyncKeyState(VK_ESCAPE) & 0x8000)
+	// 모든 가상 키(0~255)에 대해 현재 눌림 상태를 갱신합니다.
+	for (int key = 0; key < 256; ++key)
 	{
-		// isQuit = true; Run 루프 종료.
-		Quit();
+		// GetAsyncKeyState가 0x8000 비트가 켜져 있으면 현재 눌려 있는 상태.
+		keyStates[key].isKeyDown =
+			(GetAsyncKeyState(key) && 0x8000) != 0;
 	}
 }
 
@@ -117,14 +156,37 @@ void Engine::Tick(float deltaTime)
 		return;
 	}
 
-	const float fps = 1.0f / deltaTime;
+#pragma region testDay2
+	//const float fps = 1.0f / deltaTime;
 
-	std::wcout << L"DeltaTime: " << deltaTime << L", FPS: " << fps << L"\n";
+	//std::wcout << L"DeltaTime: " << deltaTime << L", FPS: " << fps << L"\n";
+#pragma endregion
 
 	// 등록된 레벨이 있다면 레벨의 Tick을 호출합니다.
 	if (mainLevel != nullptr)
 	{
 		mainLevel->Tick(deltaTime);
+	}
+
+#pragma region testDay3
+	if (GetKeyDown('A'))
+	{
+		std::wcout << L"[Engine] A KeyDown\n";
+	}
+	if (GetKey('A'))
+	{
+		std::wcout << L"[Engine] A GetKey\n";
+	}
+	if (GetKeyUp('A'))
+	{
+		std::wcout << L"[Engine] A GetKeyUp\n";
+	}
+#pragma endregion
+
+	// ESC 키를 한 번 눌렀을 때 게임 종료.
+	if (GetKeyDown(VK_ESCAPE))
+	{
+		Quit();
 	}
 }
 

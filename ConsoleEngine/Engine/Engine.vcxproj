@@ -89,10 +89,10 @@ REM Lib\Engine 폴더 생성
 if not exist "$(SolutionDir)Lib\Engine" mkdir $(SolutionDir)\Lib\Engine"
 REM Includes\Math 폴더 생성
 if not exist "$(SolutionDir)Includes\Math" mkdir "$(SolutionDir)Includes\Math"
-REM Includes\Actor 폴더 생성
-if not exist "$(SolutionDir)Includes\Actor" mkdir $(SolutionDir)Includes\Actor"
-REM Includes\Level 폴더 생성
-if not exist "$(SolutionDir)Includes\Level" mkdir "$(SolutionDir)Includes\Level"
+REM Includes\Actors 폴더 생성
+if not exist "$(SolutionDir)Includes\Actors" mkdir $(SolutionDir)Includes\Actors"
+REM Includes\Levels 폴더 생성
+if not exist "$(SolutionDir)Includes\Levels" mkdir "$(SolutionDir)Includes\Levels"
 REM 헤더 복사
 copy /Y "$(ProjectDir)Core\Core.h" "$(SolutionDir)Includes\Core\Core.h"
 copy /Y "$(ProjectDir)Core\Engine.h" "$(SolutionDir)Includes\Core\Engine.h"
@@ -102,8 +102,8 @@ copy /Y "$(TargetDir)$(TargetName).lib" $(SolutionDir)Lib\Engine\$(TargetName).l
 REM Math 헤더 복사
 copy /Y "$(ProjectDir)Math\Vector2.h" "$(SolutionDir)Includes\Math\Vector2.h"
 REM Actor / Level 헤더 복사
-copy /Y "$(ProjectDir)Actor\Actor.h" "$(SolutionDir)Includes\Actor\Actor.h"
-copy /Y "$(ProjectDir)Level\Level.h" "$(SolutionDir)Includes\Level\Level.h"</Command>
+copy /Y "$(ProjectDir)Actors\Actor.h" "$(SolutionDir)Includes\Actors\Actor.h"
+copy /Y "$(ProjectDir)Levels\Level.h" "$(SolutionDir)Includes\Levels\Level.h"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -127,10 +127,10 @@ REM Lib\Engine 폴더 생성
 if not exist "$(SolutionDir)Lib\Engine" mkdir $(SolutionDir)\Lib\Engine"
 REM Includes\Math 폴더 생성
 if not exist "$(SolutionDir)Includes\Math" mkdir "$(SolutionDir)Includes\Math"
-REM Includes\Actor 폴더 생성
-if not exist "$(SolutionDir)Includes\Actor" mkdir $(SolutionDir)Includes\Actor"
-REM Includes\Level 폴더 생성
-if not exist "$(SolutionDir)Includes\Level" mkdir "$(SolutionDir)Includes\Level"
+REM Includes\Actors 폴더 생성
+if not exist "$(SolutionDir)Includes\Actors" mkdir $(SolutionDir)Includes\Actors"
+REM Includes\Levels 폴더 생성
+if not exist "$(SolutionDir)Includes\Levels" mkdir "$(SolutionDir)Includes\Levels"
 REM 헤더 복사
 copy /Y "$(ProjectDir)Core\Core.h" "$(SolutionDir)Includes\Core\Core.h"
 copy /Y "$(ProjectDir)Core\Engine.h" "$(SolutionDir)Includes\Core\Engine.h"
@@ -140,8 +140,8 @@ copy /Y "$(TargetDir)$(TargetName).lib" $(SolutionDir)Lib\Engine\$(TargetName).l
 REM Math 헤더 복사
 copy /Y "$(ProjectDir)Math\Vector2.h" "$(SolutionDir)Includes\Math\Vector2.h"
 REM Actor / Level 헤더 복사
-copy /Y "$(ProjectDir)Actor\Actor.h" "$(SolutionDir)Includes\Actor\Actor.h"
-copy /Y "$(ProjectDir)Level\Level.h" "$(SolutionDir)Includes\Level\Level.h"</Command>
+copy /Y "$(ProjectDir)Actors\Actor.h" "$(SolutionDir)Includes\Actors\Actor.h"
+copy /Y "$(ProjectDir)Levels\Level.h" "$(SolutionDir)Includes\Levels\Level.h"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -163,10 +163,10 @@ REM Lib\Engine 폴더 생성
 if not exist "$(SolutionDir)Lib\Engine" mkdir $(SolutionDir)\Lib\Engine"
 REM Includes\Math 폴더 생성
 if not exist "$(SolutionDir)Includes\Math" mkdir "$(SolutionDir)Includes\Math"
-REM Includes\Actor 폴더 생성
-if not exist "$(SolutionDir)Includes\Actor" mkdir $(SolutionDir)Includes\Actor"
-REM Includes\Level 폴더 생성
-if not exist "$(SolutionDir)Includes\Level" mkdir "$(SolutionDir)Includes\Level"
+REM Includes\Actors 폴더 생성
+if not exist "$(SolutionDir)Includes\Actors" mkdir $(SolutionDir)Includes\Actors"
+REM Includes\Levels 폴더 생성
+if not exist "$(SolutionDir)Includes\Levels" mkdir "$(SolutionDir)Includes\Levels"
 REM 헤더 복사
 copy /Y "$(ProjectDir)Core\Core.h" "$(SolutionDir)Includes\Core\Core.h"
 copy /Y "$(ProjectDir)Core\Engine.h" "$(SolutionDir)Includes\Core\Engine.h"
@@ -176,8 +176,8 @@ copy /Y "$(TargetDir)$(TargetName).lib" $(SolutionDir)Lib\Engine\$(TargetName).l
 REM Math 헤더 복사
 copy /Y "$(ProjectDir)Math\Vector2.h" "$(SolutionDir)Includes\Math\Vector2.h"
 REM Actor / Level 헤더 복사
-copy /Y "$(ProjectDir)Actor\Actor.h" "$(SolutionDir)Includes\Actor\Actor.h"
-copy /Y "$(ProjectDir)Level\Level.h" "$(SolutionDir)Includes\Level\Level.h"</Command>
+copy /Y "$(ProjectDir)Actors\Actor.h" "$(SolutionDir)Includes\Actors\Actor.h"
+copy /Y "$(ProjectDir)Levels\Level.h" "$(SolutionDir)Includes\Levels\Level.h"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -201,10 +201,10 @@ REM Lib\Engine 폴더 생성
 if not exist "$(SolutionDir)Lib\Engine" mkdir $(SolutionDir)\Lib\Engine"
 REM Includes\Math 폴더 생성
 if not exist "$(SolutionDir)Includes\Math" mkdir "$(SolutionDir)Includes\Math"
-REM Includes\Actor 폴더 생성
-if not exist "$(SolutionDir)Includes\Actor" mkdir $(SolutionDir)Includes\Actor"
-REM Includes\Level 폴더 생성
-if not exist "$(SolutionDir)Includes\Level" mkdir "$(SolutionDir)Includes\Level"
+REM Includes\Actors 폴더 생성
+if not exist "$(SolutionDir)Includes\Actors" mkdir $(SolutionDir)Includes\Actors"
+REM Includes\Levels 폴더 생성
+if not exist "$(SolutionDir)Includes\Levels" mkdir "$(SolutionDir)Includes\Levels"
 REM 헤더 복사
 copy /Y "$(ProjectDir)Core\Core.h" "$(SolutionDir)Includes\Core\Core.h"
 copy /Y "$(ProjectDir)Core\Engine.h" "$(SolutionDir)Includes\Core\Engine.h"
@@ -214,8 +214,8 @@ copy /Y "$(TargetDir)$(TargetName).lib" $(SolutionDir)Lib\Engine\$(TargetName).l
 REM Math 헤더 복사
 copy /Y "$(ProjectDir)Math\Vector2.h" "$(SolutionDir)Includes\Math\Vector2.h"
 REM Actor / Level 헤더 복사
-copy /Y "$(ProjectDir)Actor\Actor.h" "$(SolutionDir)Includes\Actor\Actor.h"
-copy /Y "$(ProjectDir)Level\Level.h" "$(SolutionDir)Includes\Level\Level.h"</Command>
+copy /Y "$(ProjectDir)Actors\Actor.h" "$(SolutionDir)Includes\Actors\Actor.h"
+copy /Y "$(ProjectDir)Levels\Level.h" "$(SolutionDir)Includes\Levels\Level.h"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

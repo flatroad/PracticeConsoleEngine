@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "Core/Core.h"
+#include "Core/RTTI.h"
 #include "Actors/Actor.h"
 
 /// @class level
@@ -11,8 +12,10 @@
 /// 여러 Actor를 소유하고,
 /// 레벨의 BeginPlay / Tick / Render 시점에
 /// 각 Actor의 BeginPlay / Tick / Render를 호출하는 역할을 합니다.
-class Engine_API Level
+class Engine_API Level : public RTTI
 {
+	RTTI_DECLARATIONS(Level, RTTI)
+
 public:
 	/// @brief 빈 레벨을 생성합니다.
 	Level();

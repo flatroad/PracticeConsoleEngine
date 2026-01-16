@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/RTTI.h"
 #include "Math/Vector2.h"
 
 /// @class Actor
@@ -9,8 +10,10 @@
 /// 위치(Vector2)와 문자 이미지(char)를 가지며,
 /// 엔진과 레벨로부터 BeginPlay / Tick / Render 호출을 전달받아
 /// 게임 내에서 실제 동작을 수행하는 역할을 합니다.
-class Engine_API Actor
+class Engine_API Actor : public RTTI
 {
+	RTTI_DECLARATIONS(Actor, RTTI)
+
 public:
 	/// @brief Actor를 생성합니다. 기본 위치는 (0, 0), 이미지는 공백 문자입니다.
 	Actor();
